@@ -4,27 +4,45 @@ module c = mk_complex f32
 
 type comp = c.complex
 
-def pauli_gate : [2][2]comp =
+def h_gate : [2][2]comp =
+    let h = 1.0 / (f32.sqrt 2.0)
+
+    in [[(h, 0.0), (h, 0.0)],
+        [(h, 0.0), (-h, 0.0)]]
+
+def x_gate : [2][2]comp =
     [[(0.0, 0.0), (1.0, 0.0)],
      [(1.0, 0.0), (0.0, 0.0)]]
 
-def hadamard_gate : [2][2]comp =
-    [[(0.5, 0.0), (0.5, 0.0)],
-     [(0.5, 0.0), (-0.5, 0.0)]]
+def y_gate : [2][2]comp =
+    [[(0.0, 0.0), (0.0, -1.0)],
+     [(0.0, 1.0), (0.0, 0.0)]]
 
-let apply_gate (g: [2][2]comp) (s: [2][2]comp) : [2][2]comp =
+def z_gate : [2][2]comp =
+    [[(1.0, 0.0), (0.0, 0.0)],
+     [(0.0, 0.0), (-1.0, 0.0)]]
+
+let apply_gate [n] (g: [2][2]comp) (s: [n]comp) (pos: i32) : [n]comp =
     map (\i ->
-        map (\j ->
-            s[i, 0] c.* g[j, 0] c.+
-            s[i, 1] c.* g[i, 1]
-        ) (iota 2)
-    ) (iota 2)
+        let bit = i >> pos & 1
+        let i0 = i & !(1 << pos)
+        let i1 = i0 | (1 << pos)
 
-entry main : [][]comp =
-    let n = 2
-    let ket: [2][2]comp = [[(1.0, 0.0), (0.0, 0.0)],
-                           [(0.0, 0.0), (0.0, 0.0)]]
+        in (g[bit, 0] c.* s[i0]) c.+ (g[bit,1] c.* s[i1])
+    ) (map i32.i64 (iota n))
 
-    let result = apply_gate hadamard_gate ket
+entry main : []comp =
+    let ket: []comp = [
+            (1.0, 0.0),
+            (0.0, 0.0),
+            (0.0, 0.0),
+            (0.0, 0.0),
+            (0.0, 0.0),
+            (0.0, 0.0),
+            (0.0, 0.0),
+            (0.0, 0.0),
+        ]
+
+    let result = apply_gate y_gate ket 2
 
     in result
