@@ -25,6 +25,16 @@ def z_gate : [2][2]comp =
     [[(1.0, 0.0), (0.0, 0.0)],
      [(0.0, 0.0), (-1.0, 0.0)]]
 
+def phase_gate (k: i32) : [2][2]comp =
+    let theta = 2 * f32.pi / f32.i32 (2 ** k)
+    let re = f32.cos theta
+    let im = f32.sin theta
+    in [[(1.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (re, im)]]
+
+def t_gate : [2][2]comp =
+    phase_gate 3
+
 def cnot_gate : [4][4]comp =
     [[(1.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
      [(0.0, 0.0), (1.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
@@ -43,6 +53,16 @@ def swap_gate : [4][4]comp =
      [(0.0, 0.0), (1.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
      [(0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (1.0, 0.0)]]
 
+-- note: benchmark if this should take k as an f32
+def ctrl_phase_gate (k: i64) : [4][4]comp =
+    let theta = 2 * f32.pi / f32.i64 (2 ** k)
+    let re = f32.cos theta
+    let im = f32.sin theta
+    in [[(1.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (1.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (0.0, 0.0), (1.0, 0.0), (0.0, 0.0)],
+        [(0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (re, im)  ]]
+
 -- make quantom state with n qubits
 entry make_ket (n: i64) : []comp =
     let n = 1 << n
@@ -52,13 +72,51 @@ entry make_ket (n: i64) : []comp =
 
 -- applies 1-qubit quantom gate on qubit in n-qubit-state with varying position
 def apply_gate [n] (g: [2][2]comp) (s: [n]comp) (pos: i64) : [n]comp =
-  let q = i64.i32 (i64.ctz n) -- number of qubits, should this be a parameter instead?
+    let q = i64.i32 (i64.ctz n) -- number of qubits, should this be a parameter instead?
 
-  in map (\i ->
-    let row  = (i >> (q - 1 - pos)) & 1 -- row index into gate matrix
-    let mask = (1 << (q - 1 - pos))     -- mask with 1 at the pos bit
-    let j = i & !mask                   -- set the pos bit in i to 0
-    let k = i | mask                    -- set the pos bit in i to 1
+    in map (\i ->
+        let row  = (i >> (q - 1 - pos)) & 1 -- row index into gate matrix
+        let mask = (1 << (q - 1 - pos))     -- mask with 1 at the pos bit
+        let i0  = i & !mask                 -- set the pos bit in i to 0
+        let i1  = i | mask                  -- set the pos bit in i to 1
 
-    in s[j] c.* g[row, 0] c.+ s[k] c.* g[row, 1]
-  ) (iota n)
+        in s[i0] c.* g[row, 0] c.+ s[i1] c.* g[row, 1]
+    ) (iota n)
+
+-- applies 2-qubit quantom gate on qubit in n-qubit-state with varying position
+def apply_gate2 [n] (g: [4][4]comp) (s: [n]comp) (pos1: i64) (pos2: i64) : [n]comp =
+    let q = i64.i32 (i64.ctz n) -- number of qubits, should this be a parameter instead?
+
+    in map (\i ->
+        let bit1 = (i >> (q - 1 - pos1)) & 1 --
+        let bit2 = (i >> (q - 1 - pos2)) & 1 --
+
+        let row = bit1 << 1 | bit2           -- row index into gate matrix
+
+        let mask1 = (1 << (q - 1 - pos1))    -- mask with 1 at the pos1 bit
+        let mask2 = (1 << (q - 1 - pos2))    -- mask with 1 at the pos2 bit
+
+        let i00 = (i & !mask1) & !mask2      -- set the pos bit in i to 0
+        let i01 = (i & !mask1) | mask2       -- set the pos bit in i to 1
+        let i10 = (i | mask1) & !mask2       --
+        let i11 = (i | mask1) | mask2        --
+
+        in s[i00] c.* g[row, 0] c.+ s[i01] c.* g[row, 1] c.+
+           s[i10] c.* g[row, 2] c.+ s[i11] c.* g[row, 3]
+    ) (iota n)
+
+def apply_qft [n] (s: [n]comp) : [n]comp =
+    let q = i64.i32 (i64.ctz n) -- number of qubits, should this be a parameter instead?
+
+    let result = loop state = s for i < q do
+        let state1 = apply_gate (copy h_gate) state i
+        let state2 = loop state = state1 for j in (i + 1)..<q do
+            let phase = j - i + 1
+            let gate = ctrl_phase_gate phase
+            in apply_gate2 gate state j i
+        in state2
+
+    let result1 = loop state = result for i < q / 2 do
+        apply_gate2 (copy swap_gate) state i (q - 1 - i)
+
+    in result1

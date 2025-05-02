@@ -1,6 +1,7 @@
 import "lib"
 
--- test syntax does not support tuples, so converts to array
+-- test syntax does not seem to support tuples,
+-- so function for converting to array before comparing results
 def convert (arr: []comp) : [][2]f32 =
     map (\i -> [c.re i, c.im i]) arr
 
@@ -174,7 +175,7 @@ entry test_zgate_22 (pos: i64) : [][2]f32 =
 -- Consequtive gates
 --
 
--- TODO: description
+-- X gate followed by X gate
 -- ==
 -- entry: test_xgate_222
 -- input { 0i64 1i64 }
@@ -184,7 +185,7 @@ entry test_xgate_222 (pos1: i64) (pos2: i64) : [][2]f32 =
     let result' = apply_gate (copy x_gate) result pos2
     in convert result'
 
--- TODO: description
+-- H gate followed by H gate
 -- ==
 -- entry: test_hgate_222
 -- input { 0i64 1i64 }
@@ -197,3 +198,18 @@ entry test_hgate_222 (pos1: i64) (pos2: i64) : [][2]f32 =
 --
 -- 2-qubit gates
 --
+
+--
+-- Consequtive gates
+--
+
+-- H gate followed by SWAP gate on 2-qubit state
+-- ==
+-- entry: test_hswap_2_01
+-- input { 0i64 0i64 1i64 }
+-- output { [[0.70710677f32, 0.0f32], [0.70710677f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
+entry test_hswap_2_01 (pos1: i64) (pos2: i64) (pos3: i64) : [][2]f32 =
+    let ket = make_ket 2
+    let result = apply_gate (copy h_gate) ket pos1
+    let result' = apply_gate2 (copy swap_gate) result pos2 pos3
+    in convert result'

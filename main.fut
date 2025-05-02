@@ -1,8 +1,16 @@
 import "lib"
 
-entry main : []comp =
-    let ket = make_ket 3
-    let result = apply_gate h_gate ket 0
-    let result' = apply_gate h_gate result 1
+-- test syntax does not seem to support tuples,
+-- so function for converting to array before comparing results
+def convert (arr: []comp) : [][2]f32 =
+    map (\i -> [c.re i, c.im i]) arr
 
-    in result'
+-- ==
+-- input { 16i64 }
+-- auto output
+
+entry main (q: i64) : [][2]f32 =
+    let ket = make_ket q
+    let result = apply_qft ket
+
+    in (convert result)
