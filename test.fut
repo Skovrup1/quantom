@@ -11,11 +11,11 @@ def convert (arr: []comp) : [][2]f32 =
 
 -- Applying 1-qubit H gate on qubit 1 in 1-qubit-state
 -- ==
--- entry: test_hgate_1
+-- entry: test_hgate_1_0
 -- input { 0i64 }
 -- output { [[0.70710677f32, 0.0f32], [0.70710677f32, 0.0f32]] }
 
-entry test_hgate_1 (pos: i64) : [][2]f32 =
+entry test_hgate_1_0 (pos: i64) : [][2]f32 =
     let result = apply_gate (copy h_gate) (make_ket 1) pos
     in convert result
 

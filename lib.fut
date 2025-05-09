@@ -120,3 +120,17 @@ def apply_qft [n] (s: [n]comp) : [n]comp =
         apply_gate2 (copy swap_gate) state i (q - 1 - i)
 
     in result1
+
+def apply_qft_exp [n] (s: [n]comp) (q: i64) : [n]comp =
+    let result = loop state = s for i < q do
+        let state1 = apply_gate (copy h_gate) state i
+        let state2 = loop state = state1 for j in (i + 1)..<q do
+            let phase = j - i + 1
+            let gate = ctrl_phase_gate phase
+            in apply_gate2 gate state j i
+        in state2
+
+    let result1 = loop state = result for i < q / 2 do
+        apply_gate2 (copy swap_gate) state i (q - 1 - i)
+
+    in result1
