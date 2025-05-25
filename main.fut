@@ -6,23 +6,25 @@ def convert (arr: []comp) : [][2]f32 =
     map (\i -> [c.re i, c.im i]) arr
 
 -- ==
--- entry: qft_exp
--- input { 25i64 }
+-- entry: qft
+-- input { 24i64 }
 -- auto output
-
 entry qft (q: i64) : [][2]f32 =
     let ket = make_ket q
-    let result = apply_qft ket
+    let result = apply_qft ket q
 
     in (convert result)
 
 -- ==
--- entry: qft_exp
--- input { 25i64 }
+-- entry: grover
+-- input { 24i64 }
 -- auto output
+entry grover (q: i64) : [][2]f32 =
+  let ket = make_ket q
+  let mark = 0
+  let result = apply_grover ket q mark
 
-entry qft_exp (q: i64) : [][2]f32 =
-    let ket = make_ket q
-    let result = apply_qft_exp ket q
+  in (convert result)
 
-    in (convert result)
+entry main : i64 =
+  0

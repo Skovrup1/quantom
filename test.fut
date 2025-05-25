@@ -16,7 +16,9 @@ def convert (arr: []comp) : [][2]f32 =
 -- output { [[0.70710677f32, 0.0f32], [0.70710677f32, 0.0f32]] }
 
 entry test_hgate_1_0 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy h_gate) (make_ket 1) pos
+    let q = 1
+    let ket = make_ket q
+    let result = apply_gate ket q (copy h_gate) pos
     in convert result
 
 -- Applying 1-qubit I gate on qubit 1 in 1-qubit-state
@@ -26,7 +28,9 @@ entry test_hgate_1_0 (pos: i64) : [][2]f32 =
 -- output { [[1.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_igate_1 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy i_gate) (make_ket 1) pos
+    let q = 1
+    let ket = make_ket q
+    let result = apply_gate ket q (copy i_gate) pos
     in convert result
 
 -- Applying 1-qubit X gate on qubit 1 in 1-qubit-state
@@ -36,7 +40,9 @@ entry test_igate_1 (pos: i64) : [][2]f32 =
 -- output { [[0.0f32, 0.0f32], [1.0f32, 0.0f32]] }
 
 entry test_xgate_1 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy x_gate) (make_ket 1) pos
+    let q = 1
+    let ket = make_ket q
+    let result = apply_gate ket q (copy x_gate) pos
     in convert result
 
 -- Applying 1-qubit Y gate on qubit 1 in 1-qubit-state
@@ -46,7 +52,9 @@ entry test_xgate_1 (pos: i64) : [][2]f32 =
 -- output { [[0.0f32, 0.0f32], [0.0f32, 1.0f32]] }
 
 entry test_ygate_1 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy y_gate) (make_ket 1) pos
+    let q = 1
+    let ket = make_ket q
+    let result = apply_gate ket q (copy y_gate) pos
     in convert result
 
 -- Applying 1-qubit Z gate on qubit 1 in 1-qubit-state
@@ -56,7 +64,9 @@ entry test_ygate_1 (pos: i64) : [][2]f32 =
 -- output { [[1.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_zgate_1 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy z_gate) (make_ket 1) pos
+    let q = 1
+    let ket = make_ket q
+    let result = apply_gate ket q (copy z_gate) pos
     in convert result
 
 --
@@ -74,7 +84,9 @@ entry test_zgate_1 (pos: i64) : [][2]f32 =
 -- output { [[0.70710677f32, 0.0f32], [0.0f32, 0.0f32], [0.70710677f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_hgate_12 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy h_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy h_gate) pos
     in convert result
 
 -- Applying 1-qubit I gate on qubit 1 in 2-qubit-state
@@ -84,7 +96,9 @@ entry test_hgate_12 (pos: i64) : [][2]f32 =
 -- output { [[1.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_igate_12 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy i_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy i_gate) pos
     in convert result
 
 -- Applying 1-qubit X gate on qubit 1 in 2-qubit-state
@@ -94,7 +108,9 @@ entry test_igate_12 (pos: i64) : [][2]f32 =
 -- output { [[0.0f32, 0.0f32], [0.0f32, 0.0f32], [1.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_xgate_12 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy x_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy x_gate) pos
     in convert result
 
 -- Applying 1-qubit Y gate on qubit 1 in 2-qubit-state
@@ -104,7 +120,9 @@ entry test_xgate_12 (pos: i64) : [][2]f32 =
 -- output { [[0.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 1.0f32], [0.0f32, 0.0f32]] }
 
 entry test_ygate_12 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy y_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy y_gate) pos
     in convert result
 
 -- Applying 1-qubit Z gate on qubit 1 in 2-qubit-state
@@ -114,7 +132,9 @@ entry test_ygate_12 (pos: i64) : [][2]f32 =
 -- output { [[1.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_zgate_12 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy z_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy z_gate) pos
     in convert result
 
 --
@@ -128,7 +148,9 @@ entry test_zgate_12 (pos: i64) : [][2]f32 =
 -- output { [[0.70710677f32, 0.0f32], [0.70710677f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_hgate_22 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy h_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy h_gate) pos
     in convert result
 
 -- Applying 1-qubit I gate on qubit 2 in 2-qubit-state
@@ -138,7 +160,9 @@ entry test_hgate_22 (pos: i64) : [][2]f32 =
 -- output { [[1.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_igate_22 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy i_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy i_gate) pos
     in convert result
 
 -- Applying 1-qubit X gate on qubit 2 in 2-qubit-state
@@ -148,7 +172,9 @@ entry test_igate_22 (pos: i64) : [][2]f32 =
 -- output { [[0.0f32, 0.0f32], [1.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_xgate_22 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy x_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy x_gate) pos
     in convert result
 
 -- Applying 1-qubit Y gate on qubit 2 in 2-qubit-state
@@ -158,7 +184,9 @@ entry test_xgate_22 (pos: i64) : [][2]f32 =
 -- output { [[0.0f32, 0.0f32], [0.0f32, 1.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_ygate_22 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy y_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy y_gate) pos
     in convert result
 
 -- Applying 1-qubit Z gate on qubit 2 in 2-qubit-state
@@ -168,7 +196,9 @@ entry test_ygate_22 (pos: i64) : [][2]f32 =
 -- output { [[1.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 
 entry test_zgate_22 (pos: i64) : [][2]f32 =
-    let result = apply_gate (copy z_gate) (make_ket 2) pos
+    let q = 2
+    let ket = make_ket q
+    let result = apply_gate ket q (copy z_gate) pos
     in convert result
 
 --
@@ -181,9 +211,11 @@ entry test_zgate_22 (pos: i64) : [][2]f32 =
 -- input { 0i64 1i64 }
 -- output { [[0.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32], [1.0f32, 0.0f32]] }
 entry test_xgate_222 (pos1: i64) (pos2: i64) : [][2]f32 =
-    let result = apply_gate (copy x_gate) (make_ket 2) pos1
-    let result' = apply_gate (copy x_gate) result pos2
-    in convert result'
+    let q = 2
+    let ket = make_ket q
+    let result  = apply_gate ket    q (copy x_gate) pos1
+    let result1 = apply_gate result q (copy x_gate) pos2
+    in convert result1
 
 -- H gate followed by H gate
 -- ==
@@ -191,9 +223,11 @@ entry test_xgate_222 (pos1: i64) (pos2: i64) : [][2]f32 =
 -- input { 0i64 1i64 }
 -- output { [[0.5f32, 0.0f32], [0.5f32, 0.0f32], [0.5f32, 0.0f32], [0.5f32, 0.0f32]] }
 entry test_hgate_222 (pos1: i64) (pos2: i64) : [][2]f32 =
-    let result = apply_gate (copy h_gate) (make_ket 2) pos1
-    let result' = apply_gate (copy h_gate) result pos2
-    in convert result'
+    let q = 2
+    let ket = make_ket q
+    let result  = apply_gate ket    q (copy h_gate) pos1
+    let result1 = apply_gate result q (copy h_gate) pos2
+    in convert result1
 
 --
 -- 2-qubit gates
@@ -209,7 +243,22 @@ entry test_hgate_222 (pos1: i64) (pos2: i64) : [][2]f32 =
 -- input { 0i64 0i64 1i64 }
 -- output { [[0.70710677f32, 0.0f32], [0.70710677f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
 entry test_hswap_2_01 (pos1: i64) (pos2: i64) (pos3: i64) : [][2]f32 =
-    let ket = make_ket 2
-    let result = apply_gate (copy h_gate) ket pos1
-    let result' = apply_gate2 (copy swap_gate) result pos2 pos3
-    in convert result'
+    let q = 2
+    let ket = make_ket q
+    let result  = apply_gate  ket    q (copy h_gate)    pos1
+    let result1 = apply_gate2 result q (copy swap_gate) pos2 pos3
+    in convert result1
+
+
+-- xgate followed by 2 cnot gates on 2-qubit state
+-- ==
+-- entry: test_x_cnot_2_01
+-- input { 0i64 0i64 1i64 1i64 0i64 }
+-- output { [[0.0f32, 0.0f32], [1.0f32, 0.0f32], [0.0f32, 0.0f32], [0.0f32, 0.0f32]] }
+entry test_x_cnot_2_01 (pos1: i64) (pos2: i64) (pos3: i64) (pos4: i64) (pos5: i64) : [][2]f32 =
+    let q = 2
+    let ket = make_ket q
+    let result  = apply_gate  ket     q (copy x_gate)    pos1
+    let result1 = apply_gate2 result  q (copy cnot_gate) pos2 pos3
+    let result2 = apply_gate2 result1 q (copy cnot_gate) pos4 pos5
+    in convert result2
