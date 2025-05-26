@@ -132,6 +132,7 @@ def apply_mcz [n] (s: [n]comp) : [n]comp =
     let r[n - 1] = r[n - 1] c.* (-1.0, 0.0)
     in  r
 
+
 def apply_phase_oracle [n] (s: [n]comp) (q: i64) (mark: i64) : [n]comp =
     let s = loop s = s for i < q do
         if ((mark >> i) & 1) == 0 then

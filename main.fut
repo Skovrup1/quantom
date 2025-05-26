@@ -13,7 +13,7 @@ entry qft (q: i64) : [][2]f32 =
     let ket = make_ket q
     let result = apply_qft ket q
 
-    in (convert result)
+    in convert result
 
 -- ==
 -- entry: grover
@@ -24,7 +24,4 @@ entry grover (q: i64) : [][2]f32 =
   let mark = 0
   let result = apply_grover ket q mark
 
-  in (convert result)
-
-entry main : i64 =
-  0
+  in convert result
