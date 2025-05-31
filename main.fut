@@ -7,7 +7,7 @@ def convert (arr: *[]comp) : *[][2]f32 =
 
 -- ==
 -- entry: qft
--- input { 26i64 }
+-- input { 16i64 }
 -- auto output
 entry qft (q: i64) : [][2]f32 =
     let ket = make_ket q
