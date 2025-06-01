@@ -73,6 +73,11 @@ def ctrl_phase_gate (k: i64) : [4][4]comp =
         [(0.0, 0.0), (0.0, 0.0), (1.0, 0.0), (0.0, 0.0)],
         [(0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (re, im)  ]]
 
+-- test syntax does not seem to support tuples,
+-- so function for converting to array before comparing results
+def convert (arr: *[]comp) : *[][2]f32 =
+    map (\i -> [c.re i, c.im i]) arr
+
 -- make quantom state with n qubits
 entry make_ket (n: i64) : []comp =
     let n = 1 << n
@@ -168,3 +173,4 @@ def apply_grover [n] (s: *[n]comp) (q: i64) (mark: i64) : *[n]comp =
     let s = apply_phase_oracle s q mark
     let s = apply_amplification s q
     in s
+

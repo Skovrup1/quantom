@@ -1,10 +1,5 @@
 import "lib"
 
--- test syntax does not seem to support tuples,
--- so function for converting to array before comparing results
-def convert (arr: []comp) : [][2]f32 =
-    map (\i -> [c.re i, c.im i]) arr
-
 --
 -- 1-qubit gates
 --
