@@ -7,4 +7,4 @@
 #SBATCH --mem=64G
 #SBATCH --time=12:00:00
 module load cuda
-futhark bench --backend=cuda bench.fut
+futhark bench bench.fut --backend=cuda --concurrency=1

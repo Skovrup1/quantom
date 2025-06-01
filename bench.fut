@@ -42,11 +42,6 @@ import "lib"
 
 -- ==
 -- entry: qft
--- input { 25i64 }
--- auto output
-
--- ==
--- entry: qft
 -- input { 24i64 }
 -- auto output
 
@@ -192,6 +187,11 @@ import "lib"
 
 -- ==
 -- entry: grover
+-- input { 25i64 }
+-- auto output
+
+-- ==
+-- entry: grover
 -- input { 24i64 }
 -- auto output
 
@@ -328,10 +328,10 @@ entry one : [][2]f32 =
   let ket = make_ket q
 
   let result = apply_gate ket q h_gate 0
-  let result = apply_gate ket q x_gate 0
-  let result = apply_gate ket q z_gate 0
-  let result = apply_gate ket q y_gate 0
-  let result = apply_gate ket q i_gate 0
+  let result = apply_gate result q x_gate 0
+  let result = apply_gate result q z_gate 0
+  let result = apply_gate result q y_gate 0
+  let result = apply_gate result q i_gate 0
 
   in convert result
 
@@ -340,12 +340,12 @@ entry two : [][2]f32 =
   let ket = make_ket q
 
   let result = apply_gate ket q h_gate 0
-  let result = apply_gate2 ket q cnot_gate 0 1
-  let result = apply_gate ket q y_gate 0
-  let result = apply_gate ket q x_gate 0
-  let result = apply_gate2 ket q swap_gate 0 1
-  let result = apply_gate ket q i_gate 0
-  let result = apply_gate ket q z_gate 0
+  let result = apply_gate2 result q cnot_gate 0 1
+  let result = apply_gate result q y_gate 0
+  let result = apply_gate result q x_gate 0
+  let result = apply_gate2 result q swap_gate 0 1
+  let result = apply_gate result q i_gate 0
+  let result = apply_gate result q z_gate 0
 
   in convert result
 
@@ -354,23 +354,23 @@ entry three : [][2]f32 =
   let ket = make_ket q
 
   let result = apply_gate ket q h_gate 0
-  let result = apply_gate ket q i_gate 1
-  let result = apply_gate ket q i_gate 2
-  let result = apply_gate2 ket q cnot_gate 0 1
-  let result = apply_gate ket q i_gate 2
-  let result = apply_gate ket q y_gate 0
-  let result = apply_gate2 ket q cnot_gate 1 2
-  let result = apply_gate ket q i_gate 0
-  let result = apply_gate ket q z_gate 1
-  let result = apply_gate ket q x_gate 2
-  let result = apply_gate2 ket q swap_gate 0 1
-  let result = apply_gate ket q i_gate 2
-  let result = apply_gate ket q h_gate 0
-  let result = apply_gate ket q h_gate 1
-  let result = apply_gate ket q h_gate 2
-  let result = apply_gate2 ket q cnot_gate 2 0
-  let result = apply_gate ket q x_gate 0
-  let result = apply_gate ket q y_gate 1
-  let result = apply_gate ket q z_gate 2
+  let result = apply_gate result q i_gate 1
+  let result = apply_gate result q i_gate 2
+  let result = apply_gate2 result q cnot_gate 0 1
+  let result = apply_gate result q i_gate 2
+  let result = apply_gate result q y_gate 0
+  let result = apply_gate2 result q cnot_gate 1 2
+  let result = apply_gate result q i_gate 0
+  let result = apply_gate result q z_gate 1
+  let result = apply_gate result q x_gate 2
+  let result = apply_gate2 result q swap_gate 0 1
+  let result = apply_gate result q i_gate 2
+  let result = apply_gate result q h_gate 0
+  let result = apply_gate result q h_gate 1
+  let result = apply_gate result q h_gate 2
+  let result = apply_gate2 result q cnot_gate 2 0
+  let result = apply_gate result q x_gate 0
+  let result = apply_gate result q y_gate 1
+  let result = apply_gate result q z_gate 2
 
   in convert result
