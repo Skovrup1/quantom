@@ -71,7 +71,7 @@ def ctrl_phase_gate (k: i64) : [4][4]comp =
     in [[(1.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
         [(0.0, 0.0), (1.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
         [(0.0, 0.0), (0.0, 0.0), (1.0, 0.0), (0.0, 0.0)],
-        [(0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (re, im)  ]]
+        [(0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (re,  im) ]] 
 
 -- test syntax does not seem to support tuples,
 -- so function for converting to array before comparing results
@@ -116,6 +116,9 @@ def apply_gate2 [n] (s: [n]comp) (q: i64) (g: [4][4]comp) (pos1: i64) (pos2: i64
            s[i10] c.* g[row, 2] c.+ s[i11] c.* g[row, 3]
     ) (iota n)
 
+-- applies mcz with the control points being all qubits except the last which is the target
+def apply_mcz [n] (s: *[n]comp) : *[n]comp =
+    s with [n - 1] = s[n - 1] c.* (-1.0, 0.0)
 
 def apply_qft [n] (s: *[n]comp) (q: i64) : *[n]comp =
     let result = loop state = s for i < q do
@@ -131,46 +134,106 @@ def apply_qft [n] (s: *[n]comp) (q: i64) : *[n]comp =
 
     in result1
 
--- applies mcz with the control points being all qubits except the last which is the target
-def apply_mcz [n] (s: *[n]comp) : *[n]comp =
-    s with [n - 1] = s[n - 1] c.* (-1.0, 0.0)
-
 def apply_phase_oracle [n] (s: *[n]comp) (q: i64) (mark: i64) : *[n]comp =
-    let s = loop s = s for i < q do
+    let s = loop xs = s for i < q do
         if ((mark >> i) & 1) == 0 then
-            apply_gate s q x_gate i
+            apply_gate xs q x_gate i
         else
-            s
+            xs
 
     let s = apply_mcz s
 
-    let s = loop s = s for i < q do
+    let s = loop xs = s for i < q do
         if ((mark >> i) & 1) == 0 then
-            apply_gate s q x_gate i
+            apply_gate xs q x_gate i
         else
-            s
+            xs
 
     in s
 
 def apply_amplification [n] (s: *[n]comp) (q: i64) : *[n]comp =
-    let s = loop s = s for i < q do
-        apply_gate s q h_gate i
-    let s = loop s = s for i < q do
-        apply_gate s q x_gate i
+    let s = loop xs = s for i < q do
+        apply_gate xs q h_gate i
+    let s = loop xs = s for i < q do
+        apply_gate xs q x_gate i
 
     let s = apply_mcz s
 
-    let s = loop s = s for i < q do
-        apply_gate s q x_gate i
-    let s = loop s = s for i < q do
-        apply_gate s q h_gate i
+    let s = loop xs = s for i < q do
+        apply_gate xs q x_gate i
+    let s = loop xs = s for i < q do
+        apply_gate xs q h_gate i
 
     in s
 
 def apply_grover [n] (s: *[n]comp) (q: i64) (mark: i64) : *[n]comp =
-    let s = loop s = s for i < q do
-        apply_gate s q h_gate i
+    let s = loop xs = s for i < q do
+        apply_gate xs q h_gate i
+
     let s = apply_phase_oracle s q mark
-    let s = apply_amplification s q
+
+    let sqrt_n = f32.sqrt (f32.i64 n)
+    let iterations = i32.f32 ((f32.pi / 4.0) * sqrt_n)
+    let s = loop xs = s for i < iterations do
+        apply_amplification xs q
+
     in s
+
+def one (iter: i64) : []comp =
+  let q = 1
+  let ket = make_ket q
+
+  let result = loop result = ket for i < iter do
+      let result = apply_gate result q h_gate 0
+      let result = apply_gate result q x_gate 0
+      let result = apply_gate result q z_gate 0
+      let result = apply_gate result q y_gate 0
+      let result = apply_gate result q i_gate 0
+      in result
+
+  in result
+
+def two (iter: i64) : []comp =
+  let q = 2
+  let ket = make_ket q
+
+  let result = loop result = ket for i < iter do
+      let result = apply_gate result q h_gate 0
+      let result = apply_gate2 result q cnot_gate 0 1
+      let result = apply_gate result q y_gate 0
+      let result = apply_gate result q x_gate 0
+      let result = apply_gate2 result q swap_gate 0 1
+      let result = apply_gate result q i_gate 0
+      let result = apply_gate result q z_gate 0
+      in result
+
+  in result
+
+def three (iter: i64) : []comp =
+  let q = 3
+  let ket = make_ket q
+
+  let result = loop result = ket for i < iter do
+      let result = apply_gate result q h_gate 0
+      let result = apply_gate result q i_gate 1
+      let result = apply_gate result q i_gate 2
+      let result = apply_gate2 result q cnot_gate 0 1
+      let result = apply_gate result q i_gate 2
+      let result = apply_gate result q y_gate 0
+      let result = apply_gate2 result q cnot_gate 1 2
+      let result = apply_gate result q i_gate 0
+      let result = apply_gate result q z_gate 1
+      let result = apply_gate result q x_gate 2
+      let result = apply_gate2 result q swap_gate 0 1
+      let result = apply_gate result q i_gate 2
+      let result = apply_gate result q h_gate 0
+      let result = apply_gate result q h_gate 1
+      let result = apply_gate result q h_gate 2
+      let result = apply_gate2 result q cnot_gate 2 0
+      let result = apply_gate result q x_gate 0
+      let result = apply_gate result q y_gate 1
+      let result = apply_gate result q z_gate 2
+      in result
+
+  in result
 

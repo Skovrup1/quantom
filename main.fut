@@ -1,9 +1,12 @@
 import "lib"
 
-entry main : [][2]f32 =
-  let q = 3
-  let ket = make_ket q
+-- ==
+-- entry: main
+-- input { 20i64 }
 
-  let result = map (c.+ (1.0, 0.0)) ket
+entry main (q: i64) : [][2]f32 =
+    let ket = make_ket q
+    let result = loop result = ket for i < q do
+        apply_gate result q h_gate i
 
-  in convert result
+    in convert result
