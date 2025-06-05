@@ -239,17 +239,17 @@ entry qft (q: i64) : [][2]f32 =
     in convert result
 
 entry grover (q: i64) : [][2]f32 =
-  let ket = make_ket q
-  let mark = 0b0
-  let result = apply_grover ket q mark
+    let ket = make_ket q
+    let mark = 0b0
+    let result = apply_grover ket q mark
 
-  in convert result
+    in convert result
 
 entry run_one (iter: i64) : [][2]f32 =
-  in convert (one iter)
+    convert (one iter)
 
 entry run_two (iter: i64) : [][2]f32 =
-  in convert (two iter)
+    convert (two iter)
 
 entry run_three (iter: i64) : [][2]f32 =
-  in convert (three iter)
+    convert (three iter)
