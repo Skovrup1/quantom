@@ -4,4 +4,4 @@
 #SBATCH --cpus-per-task=64
 #SBATCH --mem=80G
 #SBATCH --time=12:00:00
-python cirq-benchmarking/bench.py
+python cirq-benchmark/bench.py
