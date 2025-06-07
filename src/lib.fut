@@ -4,6 +4,19 @@ module c = mk_complex f32
 
 type comp = c.complex
 
+-- taken from "lib/github.com/diku-dk/linalg/linalg"
+def kronecker' [m] [n] [p] [q] (xss: [m][n]comp) (yss: [p][q]comp) : *[m][n][p][q]comp =
+    map (map (\x -> map (map (c.* x)) yss)) xss
+
+def kronecker [m] [n] [p] [q] (xss: [m][n]comp) (yss: [p][q]comp) : *[m * p][n * q]comp =
+    kronecker' xss yss
+    |> -- [m][n][p][q]
+       map transpose
+    |> -- [m][p][n][q]
+       flatten
+    |> -- [m*p][n][q]
+       map flatten
+
 def h_gate : [2][2]comp =
     let h = 1.0 / (f32.sqrt 2.0)
     in [[(h, 0.0), (h, 0.0)],
@@ -44,6 +57,12 @@ def t_gate : [2][2]comp =
 
 def inv_t_gate : [2][2]comp =
     inv_phase_gate 3
+
+def h2_gate : [4][4]comp =
+    kronecker h_gate h_gate :> [4][4]comp
+
+def x2_gate : [4][4]comp =
+    kronecker h_gate h_gate :> [4][4]comp
 
 def cnot_gate : [4][4]comp =
     [[(1.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)],
@@ -166,6 +185,22 @@ def apply_amplification [n] (s: *[n]comp) (q: i64) : *[n]comp =
 
     in s
 
+
+def apply_amplification_fused [n] (s: *[n]comp) (q: i64) : *[n]comp =
+    let s = loop xs = s for i in 0..2..<q do
+        apply_gate2 xs q h2_gate i (i + 1)
+    let s = loop xs = s for i in 0..2..<q do
+        apply_gate2 xs q x2_gate i (i + 1)
+
+    let s = apply_mcz s
+
+    let s = loop xs = s for i in 0..2..<q do
+        apply_gate2 xs q x2_gate i (i + 1)
+    let s = loop xs = s for i in 0..2..<q do
+        apply_gate2 xs q h2_gate i (i + 1)
+
+    in s
+
 def apply_grover [n] (s: *[n]comp) (q: i64) (mark: i64) : *[n]comp =
     let s = loop xs = s for i < q do
         apply_gate xs q h_gate i
@@ -176,6 +211,19 @@ def apply_grover [n] (s: *[n]comp) (q: i64) (mark: i64) : *[n]comp =
     let iterations = i32.f32 ((f32.pi / 4.0) * sqrt_n)
     let s = loop xs = s for i < iterations do
         apply_amplification xs q
+
+    in s
+
+def apply_grover_fused [n] (s: *[n]comp) (q: i64) (mark: i64) : *[n]comp =
+    let s = loop xs = s for i in 0..2..<q do
+        apply_gate2 xs q h2_gate i (i + 1)
+
+    let s = apply_phase_oracle s q mark
+
+    let sqrt_n = f32.sqrt (f32.i64 n)
+    let iterations = i32.f32 ((f32.pi / 4.0) * sqrt_n)
+    let s = loop xs = s for i < iterations do
+        apply_amplification_fused xs q
 
     in s
 
@@ -201,10 +249,10 @@ def two (iter: i64) : []comp =
       let result = apply_gate result q h_gate 0
       let result = apply_gate2 result q cnot_gate 0 1
       let result = apply_gate result q y_gate 0
-      let result = apply_gate result q x_gate 0
+      let result = apply_gate result q x_gate 1
       let result = apply_gate2 result q swap_gate 0 1
       let result = apply_gate result q i_gate 0
-      let result = apply_gate result q z_gate 0
+      let result = apply_gate result q z_gate 1
       in result
 
   in result
