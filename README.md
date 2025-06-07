@@ -23,7 +23,7 @@ futhark bench src/grover_bench.fut --backend=hip
 
 ### Cross vendor
 ```
-futhark bench src/simple_bench.fut --backend=hip
-futhark bench src/qft_bench.fut    --backend=hip
-futhark bench src/grover_bench.fut --backend=hip
+futhark bench src/simple_bench.fut --backend=opencl
+futhark bench src/qft_bench.fut    --backend=opencl
+futhark bench src/grover_bench.fut --backend=opencl
 ```
