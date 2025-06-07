@@ -132,7 +132,7 @@ def benchmark_circuits(circuits, num_runs=1, warmup_runs=0, simulator = None):
 
     return results
 
-options = {'t': 64} # how many threads to use
+options = {'t': 28} # how many threads to use
 simulator = qsimcirq.QSimSimulator(options)
 
 circuits = {

@@ -4,4 +4,4 @@
 #SBATCH --cpus-per-task=64
 #SBATCH --mem=8G
 #SBATCH --time=12:00:00
-futhark bench src/cpu_bench.fut --backend=multicore --concurrency=1
+futhark bench src/grover_bench.fut --backend=multicore --concurrency=1
